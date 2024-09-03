@@ -67,12 +67,11 @@
         url: "https://tavusapi.com/v2/conversations",
         apiKey: "624b8c020e374121a8439c0ac6659460",
         replicaId: "r79e1c033f",    // Customizable replica ID
-        personaId: "p7dbe515",       // Customizable persona ID
-        callbackUrl: "https://xxx.app/webhook", // Customizable callback URL
-        conversationName: "A Meeting with Gaby", // Default conversation name
+        personaId: "p4ca6cc0",       // Customizable persona ID
+        conversationName: "A Meeting with Mark", // Default conversation name
         maxCallDuration: 3600,       // Maximum call duration in seconds
         participantLeftTimeout: 60,  // Timeout for participant left in seconds
-        enableRecording: false       // Option to enable/disable recording
+        enableRecording: false,       // Option to enable/disable recording
     };
 
     function requestCameraAndMicPermissions() {
@@ -101,7 +100,8 @@
         // Create the request data object
         const requestData = {
             replica_id: API_CONFIG.replicaId,
-            persona_id: API_CONFIG.personaId
+            persona_id: API_CONFIG.personaId,
+            custom_greeting: "Thank you for contacting Cream Digital. My name is Mark. Who do I have the pleasure of speaking with today ? ",
 
         };
 
