@@ -5,20 +5,11 @@
     <script crossorigin src="https://unpkg.com/@daily-co/daily-js"></script>
     <style>
         /* Custom CSS for buttons and layout */
-        .btn {
-            padding: 10px 20px;
-            background-color: #e7c3c2;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 24px;
-            margin-top: 10px;
-        }
-
-        .btn:disabled {
-            background-color: #888;
-            cursor: not-allowed;
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
         }
 
         .panel {
@@ -26,6 +17,33 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            background-image: url('./AI_Avatar.jpg');
+            /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .btn {
+            padding: 20px 30px;
+            background-color: #faebd5;
+            color: #1c1c1c;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 24px;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #1c1c1c;
+            color: white;
+        }
+
+        .btn:disabled {
+            background-color: #888;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -34,89 +52,90 @@
     <!-- Beautiful Button -->
     <div class="panel">
         <button id="start-conversation" class="btn">
-            Start Conversation
+            START CONVERSATION
         </button>
     </div>
 
     <div id="conversation-link" style="margin-top: 20px;"></div>
+</body>
 
-    <script>
-        // API details configuration
-        const API_CONFIG = {
-            url: "https://tavusapi.com/v2/conversations",
-            apiKey: "624b8c020e374121a8439c0ac6659460",
-            replicaId: "r79e1c033f",    // Customizable replica ID
-            personaId: "p64ababa",       // Customizable persona ID
-            callbackUrl: "https://xxx.app/webhook", // Customizable callback URL
-            conversationName: "A Meeting with Gaby", // Default conversation name
-            maxCallDuration: 3600,       // Maximum call duration in seconds
-            participantLeftTimeout: 60,  // Timeout for participant left in seconds
-            enableRecording: false       // Option to enable/disable recording
+
+<script>
+    // API details configuration
+    const API_CONFIG = {
+        url: "https://tavusapi.com/v2/conversations",
+        apiKey: "624b8c020e374121a8439c0ac6659460",
+        replicaId: "r79e1c033f",    // Customizable replica ID
+        personaId: "p64ababa",       // Customizable persona ID
+        callbackUrl: "https://xxx.app/webhook", // Customizable callback URL
+        conversationName: "A Meeting with Gaby", // Default conversation name
+        maxCallDuration: 3600,       // Maximum call duration in seconds
+        participantLeftTimeout: 60,  // Timeout for participant left in seconds
+        enableRecording: false       // Option to enable/disable recording
+    };
+
+
+    // Event listener for starting the conversation
+    document.getElementById("start-conversation").addEventListener("click", async function () {
+        // Disable the button to prevent multiple clicks
+        this.disabled = true;
+
+        // Create the request data object
+        const requestData = {
+            replica_id: API_CONFIG.replicaId,
+            persona_id: API_CONFIG.personaId
+
         };
 
+        try {
 
-        // Event listener for starting the conversation
-        document.getElementById("start-conversation").addEventListener("click", async function () {
-            // Disable the button to prevent multiple clicks
-            this.disabled = true;
+            const response = await fetch(API_CONFIG.url, {
+                method: "POST",
+                headers: {
+                    "x-api-key": API_CONFIG.apiKey,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestData)
+            });
 
-            // Create the request data object
-            const requestData = {
-                replica_id: API_CONFIG.replicaId,
-                persona_id: API_CONFIG.personaId
-
-            };
-
-            try {
-
-                const response = await fetch(API_CONFIG.url, {
-                    method: "POST",
-                    headers: {
-                        "x-api-key": API_CONFIG.apiKey,
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(requestData)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                const conversationUrl = result.conversation_url;
-
-                document.getElementById("conversation-link").innerHTML = `
-                    <p>Conversation started! Click the link below to join:</p>
-                    <a href="${conversationUrl}" target="_blank">${conversationUrl}</a>
-                `;
-
-                const call = window.Daily.createFrame({
-                    iframeStyle: {
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                    },
-                    layoutConfig: {
-                        grid: {
-                            minTilesPerPage: 1, // default: 1, minimum required: 1
-                            maxTilesPerPage: 1, // default: 25, maximum allowable: 49
-                        },
-                    },
-                });
-                call.join({ url: conversationUrl });
-
-            } catch (error) {
-                console.error("There was an error with the API request:", error);
-                document.getElementById("conversation-link").innerHTML = `
-                    <p style="color:red;">Failed to start the conversation: ${error.message}</p>
-                `;
-            } finally {
-                document.getElementById("start-conversation").disabled = false;
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        });
-    </script>
-</body>
+
+            const result = await response.json();
+            const conversationUrl = result.conversation_url;
+
+            document.getElementById("conversation-link").innerHTML = `
+                <p>Conversation started! Click the link below to join:</p>
+                <a href="${conversationUrl}" target="_blank">${conversationUrl}</a>
+            `;
+
+            const call = window.Daily.createFrame({
+                iframeStyle: {
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                },
+                layoutConfig: {
+                    grid: {
+                        minTilesPerPage: 1, // default: 1, minimum required: 1
+                        maxTilesPerPage: 1, // default: 25, maximum allowable: 49
+                    },
+                },
+            });
+            call.join({ url: conversationUrl });
+
+        } catch (error) {
+            console.error("There was an error with the API request:", error);
+            document.getElementById("conversation-link").innerHTML = `
+                <p style="color:red;">Failed to start the conversation: ${error.message}</p>
+            `;
+        } finally {
+            document.getElementById("start-conversation").disabled = false;
+        }
+    });
+</script>
 
 </html>
