@@ -54,9 +54,10 @@
         <button id="start-conversation" class="btn">
             START CONVERSATION
         </button>
+        <div id="conversation-link" style="margin-top: 20px;"></div>
+
     </div>
 
-    <div id="conversation-link" style="margin-top: 20px;"></div>
 </body>
 
 
@@ -105,10 +106,10 @@
             const result = await response.json();
             const conversationUrl = result.conversation_url;
 
-            document.getElementById("conversation-link").innerHTML = `
-                <p>Conversation started! Click the link below to join:</p>
-                <a href="${conversationUrl}" target="_blank">${conversationUrl}</a>
-            `;
+            // document.getElementById("conversation-link").innerHTML = `
+            //     <p>Conversation started! Click the link below to join:</p>
+            //     <a href="${conversationUrl}" target="_blank">${conversationUrl}</a>
+            // `;
 
             const call = window.Daily.createFrame({
                 iframeStyle: {
@@ -117,13 +118,7 @@
                     left: 0,
                     width: '100%',
                     height: '100%',
-                },
-                layoutConfig: {
-                    grid: {
-                        minTilesPerPage: 1, // default: 1, minimum required: 1
-                        maxTilesPerPage: 1, // default: 25, maximum allowable: 49
-                    },
-                },
+                }
             });
             call.join({ url: conversationUrl });
 
