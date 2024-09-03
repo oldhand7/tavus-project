@@ -75,7 +75,24 @@
         enableRecording: false       // Option to enable/disable recording
     };
 
+    function requestCameraAndMicPermissions() {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then(function (stream) {
+                console.log("permitted")
+                // Permissions granted, you can now use the camera and microphone
+                console.log('Camera and microphone access granted.');
 
+                // Stop all tracks to avoid the camera and mic being continuously used
+                stream.getTracks().forEach(track => track.stop());
+            })
+            .catch(function (err) {
+                // Handle the error if permissions are denied or not available
+                console.error('Error accessing camera and microphone:', err);
+            });
+    }
+
+    // Call the function to request permissions
+    requestCameraAndMicPermissions();
     // Event listener for starting the conversation
     document.getElementById("start-conversation").addEventListener("click", async function () {
         // Disable the button to prevent multiple clicks
